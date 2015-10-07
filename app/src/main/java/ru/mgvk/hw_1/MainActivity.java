@@ -1,16 +1,33 @@
 package ru.mgvk.hw_1;
 
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 
 public class MainActivity extends AppCompatActivity {
+
+
+    Button btn;
+    RelativeLayout lyt1;
+
+    boolean b = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        lyt1 = (RelativeLayout) findViewById(R.id.lyt1);
+
+
+        btn = (Button) findViewById(R.id.btn1);
+        btn.setOnClickListener(new onBtn1ClickListener());
+
     }
 
     @Override
@@ -34,4 +51,22 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    class onBtn1ClickListener implements View.OnClickListener{
+
+
+        @Override
+        public void onClick(View v) {
+            if(b) {
+                lyt1.setBackgroundResource(R.color.white);
+                b = false;
+            }else{
+                lyt1.setBackgroundResource(R.color.black);
+                b = true;
+            }
+        }
+    }
+
+
 }
