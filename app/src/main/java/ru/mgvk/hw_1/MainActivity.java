@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -18,8 +19,14 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<String> list =  new ArrayList<>();
 
+    ListView listv;
+
+    final static Object b=new Object();  //ожидание загрузки второго активити
+
     Context context;
-    int i=0;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         rl1  =(RelativeLayout) findViewById(R.id.rl1);
         rl1.setBackgroundResource(R.mipmap.image1);
 
-
+        listv =(ListView) findViewById(R.id.list);
 //        Toast.makeText(this,"Change activity",Toast.LENGTH_SHORT).show();
 //        intent = new Intent(MainActivity.this, MainActivity.class);
 //        startActivity(intent);
@@ -73,89 +80,108 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void changeact(){
-        Thread t = new Thread(new Runnable() {
+        Thread newActivityThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Thread t = Thread.currentThread();
-                try{
 
-                    t.sleep(2000);
-                }catch (Exception e){
-
-                }
-                runOnUiThread(new Runnable() {
+                Thread addlist = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(context, "Change activity", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(MainActivity.this, Main2Activity.class);
-                        startActivity(intent);
-                        try{
-                        MainActivity.this.onStop();
-                        }catch(Exception e){
-                            Log.e("except",""+e);
+
+                        synchronized (b) {
+                            try {
+                                addlist();
+                                Log.d("Thread", "Wait");
+                                b.wait();
+                            } catch (Exception e) {
+                                Log.e("Error", "" + e);
+                            }
                         }
 
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                Toast.makeText(context, "Change activity", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+                                intent.putStringArrayListExtra("list",list);
+                                startActivity(intent);
+                                finish();
+                            }
+
+                        });
                     }
                 });
+                addlist.start();
+
+                try{
+                    Thread.sleep(2000);
+                    synchronized (b) {
+                        Log.d("Thread","Notify");
+                        b.notifyAll();
+                    }
+                }catch (Exception e){
+                    Log.e("Error",""+e);
+                }
+
 
             }
         });
-
-        t.start();
-
-
+        newActivityThread.start();
     }
 
+    void addlist(){
+        for(int i=0;i<1000;i++){
+            list.add(i,"");
+        }
+        list.set(0, "Один");
+        list.set(1, "Два");
+        list.set(2, "Три");
+        list.set(3, "Четыре");
+        list.set(4, "Пять");
+        list.set(5, "Шесть");
+        list.set(6, "Семь");
+        list.set(7, "Восемь");
+        list.set(8, "Девять");
+        list.set(9, "Десять");
 
-    void setlist(){
-
-        list.add(1, "Один");
-        list.add(2, "Два");
-        list.add(3, "Три");
-        list.add(4, "Четыре");
-        list.add(5, "Пять");
-        list.add(6, "Шесть");
-        list.add(7, "Семь");
-        list.add(8, "Восемь");
-        list.add(9, "Девять");
-        list.add(10, "Десять");
-
-        list.add(11, "Одиннадцать");
-        list.add(12, "Двенадцать");
-        list.add(13, "Тринадцать");
+        list.set(10, "Одиннадцать");
+        list.set(11, "Двенадцать");
+        list.set(12, "Тринадцать");
         //14-19
-        for(int i=4;i<10;i++){
-            list.add(10 + i, list.get(i).substring(0, list.get(i).length() - 2) + "надцать");
+        for(int i=3;i<9;i++){
+            list.set(10 + i, list.get(i).substring(0, list.get(i).length() - 1) + "надцать");
         }
 
-        list.add(20, "Двадцать");
-        list.add(30, "Тридцать");
-        list.add(40, "Сорок");
+        list.set(19, "Двадцать");
+        list.set(29, "Тридцать");
+        list.set(39, "Сорок");
         //50-80
         for(int i=5;i<9;i++){
-            list.add(10 * i, list.get(i) + "десят");
+            list.set((10 * i)-1, list.get(i-1) + "десят");
         }
-        list.add(90, "Девяносто");
+        list.set(89, "Девяносто");
         //21-29,31-39,...
         for(int i=2; i<10;i++){
-            for(int j=1;j<11;j++){list.add(10 * i + j, list.get(10 * i) + " " + list.get(j));}
+            for(int j=1;j<10;j++){list.set(10 * i-1 + j, list.get(10 * i-1) + " " + list.get(j-1));}
         }
-        list.add(100, "Сто");
-        list.add(200, "Двести");
-        list.add(300, "Триста");
-        list.add(400, "Четыреста");
+        list.set(99, "Сто");
+        list.set(199, "Двести");
+        list.set(299, "Триста");
+        list.set(399, "Четыреста");
         //400,500,600...
         for(int i=5;i<10;i++){
-            list.add(100*i,list.get(i)+"сот");
+            list.set(100 * i-1, list.get(i-1) + "сот");
         }
         //101-199,201-299,...
         for(int i=100;i<1000;i+=100){
             for(int j=1;j<100;j++){
-                list.add(i+j,list.get(i)+" "+list.get(j));
+                list.set(i-1 + j, list.get(i-1) + " " + list.get(j-1));
             }
         }
-
+        list.set(999,"Тысяча");
 
     }
+
 
 }
