@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -71,12 +70,7 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public void onDestroy(){
-
-        try {
-            super.onDestroy();
-        }catch (Exception e){
-            Log.e("exc ",""+e);
-        }
+        super.onDestroy();
     }
 
     void changeact(){
@@ -94,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("Thread", "Wait");
                                 b.wait();
                             } catch (Exception e) {
-                                Log.e("Error", "" + e);
+                                Log.e("AddListThr", "" + e);
                             }
                         }
 
@@ -119,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                         b.notifyAll();
                     }
                 }catch (Exception e){
-                    Log.e("Error",""+e);
+                    Log.e("NewActThrSleep",""+e);
                 }
 
 
