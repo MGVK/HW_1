@@ -84,7 +84,7 @@ public class Main2Activity extends AppCompatActivity  {
             }
 
             holder.textView.setText(list.get(position));
-            if(position%2==0){
+            if(position%2==1){
                 holder.textView.setBackgroundResource(R.color.grey);
             }else{
                 holder.textView.setBackgroundResource(R.color.white);
