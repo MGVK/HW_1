@@ -101,8 +101,6 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-
-                                Toast.makeText(context, "Change activity", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(MainActivity.this, Main2Activity.class);
                                 intent.putStringArrayListExtra("list",list);
                                 startActivity(intent);
