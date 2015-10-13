@@ -109,8 +109,9 @@ public class MainActivity extends AppCompatActivity {
                 try{
                     Thread.sleep(2000);
                     synchronized (b) {
-                        Log.d("Thread","Notify");
-                        b.notifyAll();
+                        Log.d("Thread", "Notify");
+                        if(MainActivity.super.isDestroyed()){}else{
+                        b.notifyAll();}
                     }
                 }catch (Exception e){
                     Log.e("NewActThrSleep",""+e);
